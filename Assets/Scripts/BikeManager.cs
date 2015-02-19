@@ -5,13 +5,14 @@ using System.Collections.Generic;
 public class BikeManager : MonoBehaviour {
 
 	public BikeCamera cam;
-	public Transform bikePositions;
+	public Transform[] positionsWrapers;
 	public GameObject arrowUI;
 	public UILabel speedUI;
 	public UILabel gearstUI;
 	public UIWidget nitroUI;
 	public List<BikeControl> bikesContols;
 	BikeControl extrabike;
+	Transform bikePositions;
 	GameData data;
 
 	float cameraDistance = 4.5f;
@@ -27,6 +28,11 @@ public class BikeManager : MonoBehaviour {
 		data = GameData.Get ();
 		//TODO: remove this string if need to have different default bike on game start
 		data.currentBike = 0;
+
+		if(data.currentLvl % 2 == 0)
+			bikePositions = positionsWrapers[0];
+		else
+			bikePositions = positionsWrapers[1];
 
 		cam.distance = cameraDistance;
 		cam.haight = cameraHeight;

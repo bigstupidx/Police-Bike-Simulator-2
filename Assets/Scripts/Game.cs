@@ -50,11 +50,27 @@ public class Game : MonoBehaviour {
 		"Street Racers are in town, they surely plan to hold a race somewhere tonight, we don't know where and when. But lets go find all the cars and clamp them before night fall"
 	};
 
+	string[] itemFoundPreText = 
+	{
+		"",
+		"",
+		"",
+		"",
+		"",
+		"Car clamped, "
+	};
+
+	string[] itemFoundAfterText = 
+	{
+		" items remain!",
+		" items remain!",
+		" items remain!",
+		" items remain!",
+		" items remain!",
+		" cars remain!"
+	};
+
 	public static bool isRunning;
-
-	private int[] powers = {90,95,100,102,105,107};
-	private int[] shiftPowers = {50,55,60,65,70,75};
-
 	private bool isHomeShow = false;
 	private float scale = 0f;
 
@@ -73,6 +89,18 @@ public class Game : MonoBehaviour {
 
 	void Start()
 	{
+		Transform citys = GameObject.Find("Citys").transform;
+		if(data.currentLvl % 2 == 0)
+		{
+			citys.GetChild(0).gameObject.SetActive(true);
+			citys.GetChild(1).gameObject.SetActive(false);
+		}
+		else
+		{
+			citys.GetChild(0).gameObject.SetActive(false);
+			citys.GetChild(1).gameObject.SetActive(true);
+		}
+
 		taskView.text = missionDescription [data.currentLvl - 1];
 		taskImg.mainTexture = lvlTextures [data.currentLvl - 1];
 		setMissionItem ();
@@ -89,33 +117,6 @@ public class Game : MonoBehaviour {
 			if(missionsObj.GetChild(i).name != name)
 				missionsObj.GetChild(i).gameObject.SetActive(false);
 		}
-	}
-
-	void setBikeProperties ()
-	{
-		Transform targetBike;
-		if(data.currentBike <=2)
-		{
-			firstBike.SetActive(true);
-			secondBike.SetActive(false);
-			targetBike = firstBike.transform;
-		}
-		else
-		{
-			firstBike.SetActive(false);
-			secondBike.SetActive(true);
-			targetBike = secondBike.transform;
-		}
-		cam.target = targetBike;
-		targetBike.FindChild ("Body").GetComponent<MeshRenderer> ().material = bikeMaterials [data.currentBike];
-		targetBike.FindChild ("Steer2").GetComponent<MeshRenderer> ().material = bikeMaterials [data.currentBike];
-		BikeControl b = targetBike.GetComponent<BikeControl> ();
-		b.bikeSetting.bikePower = powers [data.currentBike];
-		b.bikeSetting.shiftPower = shiftPowers [data.currentBike];
-
-		Transform[] positionView = {targetBike.FindChild("Components").FindChild("ForestView").FindChild("View-2").transform/*,
-			targetBike.FindChild("Components").FindChild("ForestView").FindChild("View-3").transform*/};
-		cam.cameraSwitchView = positionView;
 	}
 	
 	public void StartGame(bool toHideLRButtons)
@@ -174,7 +175,7 @@ public class Game : MonoBehaviour {
 				circleRemaining -=1;
 				string textErn = "";
 				if(circleRemaining != 0)
-					textErn = circleRemaining.ToString() + " items remain!";
+					textErn = itemFoundPreText[data.currentLvl-1] + circleRemaining.ToString() + itemFoundAfterText[data.currentLvl-1];
 				else
 				{
 					//GameObject.Find ("BikeManager").GetComponent<BikeManager> ().SetAdditionalBike();
