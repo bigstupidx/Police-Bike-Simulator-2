@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class GoTo : MonoBehaviour {
+	
 
 	public static void LoadMenu()
 	{

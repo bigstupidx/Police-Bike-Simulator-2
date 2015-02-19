@@ -26,7 +26,7 @@ public class BikeManager : MonoBehaviour {
 	{
 		data = GameData.Get ();
 		//TODO: remove this string if need to have different default bike on game start
-		data.currentBike = 3;
+		data.currentBike = 0;
 
 		cam.distance = cameraDistance;
 		cam.haight = cameraHeight;

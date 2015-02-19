@@ -25,14 +25,30 @@ public class Game : MonoBehaviour {
 	public GameObject bikeAvailable;
 	public GameObject infoShow;
 	public GameObject buttonsList;
+	
+	public UILabel taskView;
+	public UITexture taskImg;
 
-	public GameObject circleWrapper;
+	public Texture[] lvlTextures;
+
+	public Transform missionsObj;
 
 	public MusicSfx soundOBJ;
 
 	public UILabel forCash;
 
+	GameObject itemsWrapper;
 	GameData data;
+
+	string[] missionDescription = 
+	{
+		"Bank robbery reported. Robbers got away but dumped cash bags around the city. It's your job to go find them.",
+		"Reports of a stolen vehicle in the area. Drive around and locate the stolen vehicle.",
+		"Robbers are hiding the stashes around the city. We have reports of their known locations, find them.",
+		"We’re getting reports of a stolen truck full of gold bars. Locate the stolen truck.",
+		"Well done for finding the truck, however the gold bars seemed to have fallen out of the back while driving. You know what's coming next, Go find the gold Bars before they come back for them.",
+		"Street Racers are in town, they surely plan to hold a race somewhere tonight, we don't know where and when. But lets go find all the cars and clamp them before night fall"
+	};
 
 	public static bool isRunning;
 
@@ -53,13 +69,26 @@ public class Game : MonoBehaviour {
 	void Awake()
 	{
 		data = GameData.Get ();
-		//setBikeProperties ();
 	}
 
 	void Start()
 	{
-		circleRemaining = circleWrapper.transform.childCount;
+		taskView.text = missionDescription [data.currentLvl - 1];
+		taskImg.mainTexture = lvlTextures [data.currentLvl - 1];
+		setMissionItem ();
+		circleRemaining = itemsWrapper.transform.childCount;
 		showScore ();
+	}
+
+	void setMissionItem ()
+	{
+		string name = "Mission " + data.currentLvl.ToString ();
+		itemsWrapper = missionsObj.FindChild (name).gameObject;
+		for(int i = 0; i < missionsObj.childCount; i++)
+		{
+			if(missionsObj.GetChild(i).name != name)
+				missionsObj.GetChild(i).gameObject.SetActive(false);
+		}
 	}
 
 	void setBikeProperties ()
@@ -148,8 +177,14 @@ public class Game : MonoBehaviour {
 					textErn = circleRemaining.ToString() + " items remain!";
 				else
 				{
-					GameObject.Find ("BikeManager").GetComponent<BikeManager> ().SetAdditionalBike();
-					textErn = "You have got additional Bike on each map!";
+					//GameObject.Find ("BikeManager").GetComponent<BikeManager> ().SetAdditionalBike();
+					textErn = "Congratulation you found all items!";
+					if(data.currentLvl == data.allowLvls)
+					{
+						data.allowLvls ++;
+						data.save();
+					}
+					StartCoroutine(goToLvlChoose());
 				}
 
 				earningView.GetComponent<UILabel>().text =textErn;
@@ -157,17 +192,25 @@ public class Game : MonoBehaviour {
 			}
 			if(forCash == null)
 				forCash = GameObject.Find("forCash").GetComponent<UILabel>();
-			forCash.text = (circleWrapper.transform.childCount - circleRemaining).ToString() + " / "+circleWrapper.transform.childCount.ToString();
+			forCash.text = (itemsWrapper.transform.childCount - circleRemaining).ToString() + " / "+itemsWrapper.transform.childCount.ToString();
 		}
+	}
+
+	IEnumerator goToLvlChoose()
+	{
+		yield return new WaitForSeconds (3.5f);
+		GameObject.Find ("BikeManager").GetComponent<BikeManager> ().Reset ();
+		GoTo.LoadEnvironmentChoose ();
+		yield return null;
 	}
 
 	IEnumerator refreshCircles ()
 	{
 		yield return new WaitForSeconds(1f);
-		circleRemaining = circleWrapper.transform.childCount;
-		for(int i = 0; i< circleWrapper.transform.childCount;i++)
+		circleRemaining = itemsWrapper.transform.childCount;
+		for(int i = 0; i< itemsWrapper.transform.childCount;i++)
 		{
-			circleWrapper.transform.GetChild(i).GetComponent<Circle>().refresh();
+			itemsWrapper.transform.GetChild(i).GetComponent<Circle>().refresh();
 			yield return new WaitForSeconds(0.03f);
 		}
 		yield return null;

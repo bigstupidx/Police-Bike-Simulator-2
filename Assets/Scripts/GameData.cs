@@ -13,9 +13,11 @@ public class GameData{
 	public bool extraBike;
 	public int cash;
 	public int currentBike;
+	public int currentLvl;
+	public int allowLvls;
 	public List<int> allowBikes;
 
-	private string version = "save_00092";
+	private string version = "save_00094";
 	public static GameData Get()
 	{
 		if (instance == null)
@@ -58,6 +60,8 @@ public class GameData{
 		extraBike = false;
 		cash = 0;
 		currentBike = 0;
+		currentLvl = 1;
+		allowLvls = 1;
 		allowBikes = new List<int> ();
 		allowBikes.Add (0);
 		save();
