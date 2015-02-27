@@ -24,6 +24,7 @@ public class Game : MonoBehaviour {
 	public GameObject earningView;
 	public GameObject bikeAvailable;
 	public GameObject infoShow;
+	public GameObject missionShow;
 	public GameObject buttonsList;
 	
 	public UILabel taskView;
@@ -46,7 +47,7 @@ public class Game : MonoBehaviour {
 		"Reports of a stolen vehicle in the area. Drive around and locate the stolen vehicle.",
 		"Robbers are hiding the stashes around the city. We have reports of their known locations, find them.",
 		"We’re getting reports of a stolen truck full of gold bars. Locate the stolen truck.",
-		"Well done for finding the truck, however the gold bars seemed to have fallen out of the back while driving. You know what's coming next, Go find the gold Bars before they come back for them.",
+		"Well done for finding the truck, however the gold bars seemed to have fallen out of the back while driving. You know what's coming next. Go find the gold bars before they come back for them.",
 		"Street Racers are in town, they surely plan to hold a race somewhere tonight, we don't know where and when. But lets go find all the cars and clamp them before night fall"
 	};
 
@@ -118,7 +119,13 @@ public class Game : MonoBehaviour {
 				missionsObj.GetChild(i).gameObject.SetActive(false);
 		}
 	}
-	
+
+	public void OnMissionShowClick()
+	{
+		missionShow.SetActive (false);
+		GameObject.Find ("AdmobAdAgent").GetComponent<AdMob_Manager> ().showBanner();
+	}
+
 	public void StartGame(bool toHideLRButtons)
 	{
 		preStartMenu.SetActive (false);
@@ -327,7 +334,7 @@ public class Game : MonoBehaviour {
 	public void onInfoClick()
 	{
 		infoShow.SetActive (false);
-		GameObject.Find ("AdmobAdAgent").GetComponent<AdMob_Manager> ().showBanner();
+		//GameObject.Find ("AdmobAdAgent").GetComponent<AdMob_Manager> ().showBanner();
 	}
 
 	public void onListClick()
