@@ -71,6 +71,16 @@ public class Game : MonoBehaviour {
 		" cars remain!"
 	};
 
+	string[] endLvlMessage = 
+	{
+		"Congratulations! You have found all the cash bags!",
+		"Congratulations! You have found stolen car!",
+		"Congratulations! You have found all the drugs!",
+		"Congratulations! You have found stolen truck!",
+		"Congratulations! You have found all the gold bars!",
+		"Congratulations! You have found all the stolen cars!"
+	};
+
 	public static bool isRunning;
 	private bool isHomeShow = false;
 	private float scale = 0f;
@@ -186,7 +196,7 @@ public class Game : MonoBehaviour {
 				else
 				{
 					//GameObject.Find ("BikeManager").GetComponent<BikeManager> ().SetAdditionalBike();
-					textErn = "Congratulation you found all items!";
+					textErn = endLvlMessage[data.currentLvl-1];
 					if(data.currentLvl == data.allowLvls)
 					{
 						data.allowLvls ++;
