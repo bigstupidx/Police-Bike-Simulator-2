@@ -55,7 +55,7 @@ public class Circle : MonoBehaviour {
 		{
 			isShow = false;
 			StartCoroutine(hideRing());
-			gm.showScore(points [(int)type]);
+			gm.showScore(points [(int)type],transform.GetSiblingIndex ());
 		}
 	}
 

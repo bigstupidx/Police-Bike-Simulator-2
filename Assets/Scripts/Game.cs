@@ -48,7 +48,7 @@ public class Game : MonoBehaviour {
 		"Robbers are hiding the stashes around the city. We have reports of their known locations, find them.",
 		"We’re getting reports of a stolen truck full of gold bars. Locate the stolen truck.",
 		"Well done for finding the truck, however the gold bars seemed to have fallen out of the back while driving. You know what's coming next. Go find the gold bars before they come back for them.",
-		"Street Racers are in town, they surely plan to hold a race somewhere tonight, we don't know where and when. But lets go find all the cars and clamp them before night fall"
+		"Reports of street racers have been sighted in the city. Locate and retrieve racing cars."
 	};
 
 	string[] itemFoundPreText = 
@@ -116,7 +116,17 @@ public class Game : MonoBehaviour {
 		taskImg.mainTexture = lvlTextures [data.currentLvl - 1];
 		setMissionItem ();
 		circleRemaining = itemsWrapper.transform.childCount;
+		circleRemaining -= data.GetFoundItemsCount ();
+		hideFoundItems ();
 		showScore ();
+	}
+
+	void hideFoundItems ()
+	{
+		for(int i = 0; i < data.collectedItems[data.currentLvl].Count;i++)
+		{
+			itemsWrapper.transform.GetChild(data.collectedItems[data.currentLvl][i]).gameObject.SetActive(false);
+		}
 	}
 
 	void setMissionItem ()
@@ -127,6 +137,8 @@ public class Game : MonoBehaviour {
 		{
 			if(missionsObj.GetChild(i).name != name)
 				missionsObj.GetChild(i).gameObject.SetActive(false);
+			else
+				GameObject.Find("BikeManager").GetComponent<BikeManager>().SetRotator(missionsObj.GetChild(i).GetComponent<ItemRotator>());
 		}
 	}
 
@@ -171,7 +183,7 @@ public class Game : MonoBehaviour {
 	}
 
 
-	public void showScore(int points = 0)
+	public void showScore(int points = 0, int id = -1)
 	{
 		if(type == GameType.collectForPoints)
 		{
@@ -189,6 +201,8 @@ public class Game : MonoBehaviour {
 		{
 			if(points != 0)
 			{
+				data.addFoundItem(id);
+				data.save();
 				circleRemaining -=1;
 				string textErn = "";
 				if(circleRemaining != 0)

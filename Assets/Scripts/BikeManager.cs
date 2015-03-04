@@ -11,6 +11,7 @@ public class BikeManager : MonoBehaviour {
 	public UILabel gearstUI;
 	public UIWidget nitroUI;
 	public List<BikeControl> bikesContols;
+	ItemRotator rotator;
 	BikeControl extrabike;
 	Transform bikePositions;
 	GameData data;
@@ -85,7 +86,11 @@ public class BikeManager : MonoBehaviour {
 		}
 		setBikeProperties ();
 	}
-
+	public void SetRotator(ItemRotator itm)
+	{
+		rotator = itm;
+		rotator.target = bikesContols [data.currentBike].transform;
+	}
 	public void SetAdditionalBike()
 	{
 		releaseAll ();

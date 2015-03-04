@@ -16,8 +16,9 @@ public class GameData{
 	public int currentLvl;
 	public int allowLvls;
 	public List<int> allowBikes;
+	public List<List<int>> collectedItems;
 
-	private string version = "save_00094";
+	private string version = "save_00097";
 	public static GameData Get()
 	{
 		if (instance == null)
@@ -61,9 +62,13 @@ public class GameData{
 		cash = 0;
 		currentBike = 0;
 		currentLvl = 1;
-		allowLvls = 1;
+		allowLvls = 10;
 		allowBikes = new List<int> ();
 		allowBikes.Add (0);
+		collectedItems = new List<List<int>> ();
+		for(int i = 0; i < 7;i++)
+			collectedItems.Add(new List<int>());
+
 		save();
 	}
 
@@ -72,6 +77,16 @@ public class GameData{
 		string data = JsonMapper.ToJson(this);
 		Debug.Log("Save gamedata as:" + data);
 		PlayerPrefs.SetString(version, data);
+	}
+
+	public int GetFoundItemsCount()
+	{
+		return collectedItems [currentLvl].Count;
+	}
+
+	public void addFoundItem(int id)
+	{
+		collectedItems [currentLvl].Add (id);
 	}
 
 	public bool bikeIsUnlock(int num)
